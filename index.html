@@ -75,7 +75,7 @@
             <div class="mb-6">
                 <h3 class="text-lg font-bold text-blue-600 mb-3 flex items-center"><span class="mr-2">📖</span> 自學網</h3>
                 <ul class="space-y-2">
-                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">📝 小數加法減法</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/math/P4_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">📝 小數加法減法</a></li>
                     <li><a href="https://baralaichow621-lab.github.io/fraction_as/" class="content-link block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">🍰 分數加法減法</a></li>
                 </ul>
             </div>
@@ -84,7 +84,7 @@
                 <h3 class="text-lg font-bold text-orange-500 mb-3 flex items-center"><span class="mr-2">🎮</span> 數學遊戲</h3>
                 <ul class="space-y-2">
                     <li><a href="https://baralaichow621-lab.github.io/fraction_division/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🧚‍♂️ 分數除法精靈戰</a></li>
-                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">⚔️ 小數加減對戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/math/P4G_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">⚔️ 小數加減對戰</a></li>
                     <li><a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏴‍☠️ 小數除法海盜戰</a></li>
                     <li><a href="https://baralaichow621-lab.github.io/decimals4/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏎️ 小數四則賽車</a></li>
                 </ul>
@@ -101,7 +101,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 自學網 1 -->
                 <!-- 加入了 content-link class -->
-                <a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="content-link block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/math/P4_Decimal_Plus_Minus.html" class="content-link block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">📝</div>
                     <h3 class="text-xl font-bold text-gray-800 text-center">小數加法減法</h3>
                     <p class="text-blue-500 text-center mt-2 font-medium">進入學習 ➔</p>
@@ -132,7 +132,7 @@
                 </a>
                 
                 <!-- 遊戲 2 -->
-                <a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/math/P4G_Decimal_Plus_Minus.html" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">⚔️</div>
                     <h3 class="text-xl font-bold text-orange-700 text-center">小數加減對戰</h3>
                     <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
@@ -247,9 +247,19 @@
                 // 設定 iframe 網址
                 gameFrame.src = url;
                 
-                // iframe 載入完成後隱藏載入中提示
+                // iframe 載入完成後隱藏載入中提示，並嘗試鎖定右鍵
                 gameFrame.onload = function() {
                     loadingSpinner.style.display = 'none';
+                    
+                    // 嘗試鎖定 iframe 內的右鍵
+                    try {
+                        gameFrame.contentWindow.document.addEventListener('contextmenu', function(event) {
+                            event.preventDefault();
+                        });
+                    } catch (error) {
+                        // 如果主網頁和遊戲不在同一個網域，瀏覽器安全機制會阻擋，這裡會自動忽略
+                        console.log("無法鎖定 iframe 右鍵（跨網域安全限制）");
+                    }
                 };
                 
                 // 如果是從側邊欄點擊的，切換畫面後自動關閉側邊欄
@@ -257,6 +267,11 @@
                     toggleMenu();
                 }
             });
+        });
+
+        // ================= 新增的功能：鎖定滑鼠右鍵 =================
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault(); // 阻止預設的右鍵選單彈出
         });
     </script>
 </body>
