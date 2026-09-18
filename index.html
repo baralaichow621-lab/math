@@ -46,7 +46,7 @@
         }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="bg-teal-50 h-screen w-full overflow-hidden m-0 p-0 text-gray-800">
 
     <!-- 浮動選單按鈕 (固定在左上角) -->
     <button id="menu-btn" class="fixed top-4 left-4 bg-teal-500 hover:bg-teal-600 text-white rounded-full p-3 shadow-lg flex items-center justify-center transition-colors">
@@ -56,59 +56,59 @@
     </button>
 
     <!-- 遮罩層 (點擊背景可關閉目錄) -->
-    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50"></div>
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
 
     <!-- 側邊欄目錄 -->
-    <div id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-white shadow-2xl overflow-y-auto">
-        <div class="p-6 pt-16"> <!-- 增加 pt-16 避免被按鈕遮擋 -->
-            <h2 class="text-2xl font-bold text-teal-600 mb-6 border-b-2 border-teal-200 pb-2">小學數學樂園</h2>
+    <div id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-white shadow-2xl overflow-y-auto z-50">
+        <div class="p-6 pt-16">
+            <a href="#" onclick="goHome(); return false;" class="block mb-6 border-b-2 border-teal-200 pb-2 hover:opacity-80 transition-opacity">
+                <h2 class="text-2xl font-bold text-teal-600">小學數學樂園</h2>
+            </a>
             
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-gray-700 mb-3 flex items-center"><span class="mr-2">🏠</span> 主頁</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" onclick="goHome(); return false;" class="block text-teal-700 hover:text-teal-500 hover:bg-teal-50 p-2 rounded transition-colors font-bold">返回主目錄</a></li>
+                </ul>
+            </div>
+
             <div class="mb-6">
                 <h3 class="text-lg font-bold text-blue-600 mb-3 flex items-center"><span class="mr-2">📖</span> 自學網</h3>
                 <ul class="space-y-2">
-                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">📝 小數加法減法</a></li>
-                    <li><a href="https://baralaichow621-lab.github.io/fraction_as/" class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">🍰 分數加法減法</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">📝 小數加法減法</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/fraction_as/" class="content-link block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">🍰 分數加法減法</a></li>
                 </ul>
             </div>
 
             <div>
                 <h3 class="text-lg font-bold text-orange-500 mb-3 flex items-center"><span class="mr-2">🎮</span> 數學遊戲</h3>
                 <ul class="space-y-2">
-                    <li><a href="https://baralaichow621-lab.github.io/fraction_division/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🧚‍♂️ 分數除法精靈戰</a></li>
-                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">⚔️ 小數加減對戰</a></li>
-                    <li><a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏴‍☠️ 小數除法海盜戰</a></li>
-                    <li><a href="https://baralaichow621-lab.github.io/decimals4/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏎️ 小數四則賽車</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/fraction_division/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🧚‍♂️ 分數除法精靈戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">⚔️ 小數加減對戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏴‍☠️ 小數除法海盜戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/decimals4/" class="content-link block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏎️ 小數四則賽車</a></li>
                 </ul>
             </div>
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto pt-10"> <!-- 增加 pt-10 避免內容被按鈕遮擋 -->
-        
-        <!-- 標題 -->
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-teal-600 mb-4 drop-shadow-md">🚀 小學數學樂園 🎯</h1>
-            <p class="text-lg text-gray-600">一齊邊玩邊學，挑戰數學任務啦！</p>
-        </header>
-
-        <!-- 自學網區域 -->
-        <section class="mb-16">
-            <div class="flex items-center mb-6">
-                <span class="text-3xl mr-3">📖</span>
-                <h2 class="text-3xl font-bold text-blue-600 border-b-4 border-blue-400 pb-2 inline-block">自學網</h2>
-            </div>
+    <!-- 主頁面容器 (包含卡片) -->
+    <div id="home-container" class="h-full w-full overflow-y-auto p-6 md:p-12 pt-20">
+        <div class="max-w-5xl mx-auto"> 
             
+            <!-- 標題 -->
+            <header class="text-center mb-12">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- 自學網 1 -->
-                <!-- 移除了 target="_blank" -->
-                <a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
+                <!-- 加入了 content-link class -->
+                <a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="content-link block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">📝</div>
                     <h3 class="text-xl font-bold text-gray-800 text-center">小數加法減法</h3>
                     <p class="text-blue-500 text-center mt-2 font-medium">進入學習 ➔</p>
                 </a>
                 
                 <!-- 自學網 2 -->
-                <a href="https://baralaichow621-lab.github.io/fraction_as/" class="block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/fraction_as/" class="content-link block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">🍰</div>
                     <h3 class="text-xl font-bold text-gray-800 text-center">分數加法減法</h3>
                     <p class="text-blue-500 text-center mt-2 font-medium">進入學習 ➔</p>
@@ -125,29 +125,28 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
                 <!-- 遊戲 1 -->
-                <!-- 移除了 target="_blank" -->
-                <a href="https://baralaichow621-lab.github.io/fraction_division/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/fraction_division/" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">🧚‍♂️</div>
                     <h3 class="text-xl font-bold text-orange-700 text-center">分數除法精靈戰</h3>
                     <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
                 </a>
                 
                 <!-- 遊戲 2 -->
-                <a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">⚔️</div>
                     <h3 class="text-xl font-bold text-orange-700 text-center">小數加減對戰</h3>
                     <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
                 </a>
 
                 <!-- 遊戲 3 -->
-                <a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">🏴‍☠️</div>
                     <h3 class="text-xl font-bold text-orange-700 text-center">小數除法海盜戰</h3>
                     <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
                 </a>
 
                 <!-- 遊戲 4 -->
-                <a href="https://baralaichow621-lab.github.io/decimals4/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                <a href="https://baralaichow621-lab.github.io/decimals4/" class="content-link block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
                     <div class="text-5xl mb-4 text-center">🏎️</div>
                     <h3 class="text-xl font-bold text-orange-700 text-center">小數四則賽車</h3>
                     <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
@@ -160,12 +159,36 @@
             <p>準備好迎接數學的挑戰了嗎？加油！</p>
         </footer>
 
+        </div>
+    </div>
+
+    <!-- 遊戲/自學網 iframe 容器 (預設隱藏) -->
+    <div id="game-container" class="hidden h-full w-full pt-20 pb-4 px-2 md:px-8">
+        <div class="w-full h-full max-w-6xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border-4 border-teal-300 relative">
+            
+            <!-- 載入中提示 -->
+            <div id="loading-spinner" class="absolute inset-0 flex items-center justify-center bg-gray-50 z-0">
+                <div class="text-center">
+                    <div class="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p class="text-teal-600 font-bold">載入中，請稍候...</p>
+                </div>
+            </div>
+            
+            <!-- iframe 本體 -->
+            <iframe id="game-frame" class="w-full h-full relative z-10 border-0" src="" allowfullscreen></iframe>
+        </div>
     </div>
 
     <script>
         const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
+        
+        // 新增的變數，用來控制畫面切換
+        const homeContainer = document.getElementById('home-container');
+        const gameContainer = document.getElementById('game-container');
+        const gameFrame = document.getElementById('game-frame');
+        const loadingSpinner = document.getElementById('loading-spinner');
 
         // 開關目錄的函數
         function toggleMenu() {
@@ -194,6 +217,46 @@
             if (sidebar.classList.contains('open')) {
                 toggleMenu();
             }
+        });
+
+        // ================= 新增的功能：嵌入網頁控制 =================
+
+        // 回到首頁函數
+        function goHome() {
+            gameContainer.classList.add('hidden');
+            homeContainer.classList.remove('hidden');
+            gameFrame.src = ''; // 清空 iframe，停止背景音樂或遊戲運行
+            
+            if (sidebar.classList.contains('open')) {
+                toggleMenu(); // 關閉目錄
+            }
+        }
+
+        // 處理所有內容連結的點擊事件 (.content-link)
+        document.querySelectorAll('.content-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault(); // 阻止跳轉新網址
+                
+                const url = link.getAttribute('href');
+                
+                // 顯示載入中動畫，隱藏首頁，顯示遊戲區
+                homeContainer.classList.add('hidden');
+                gameContainer.classList.remove('hidden');
+                loadingSpinner.style.display = 'flex';
+                
+                // 設定 iframe 網址
+                gameFrame.src = url;
+                
+                // iframe 載入完成後隱藏載入中提示
+                gameFrame.onload = function() {
+                    loadingSpinner.style.display = 'none';
+                };
+                
+                // 如果是從側邊欄點擊的，切換畫面後自動關閉側邊欄
+                if (sidebar.classList.contains('open')) {
+                    toggleMenu();
+                }
+            });
         });
     </script>
 </body>
