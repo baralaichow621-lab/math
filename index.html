@@ -1,149 +1,200 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>數學大冒險 - 勇者系統</title>
+    <title>小學數學遊戲與自學網</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        #sidebar { transition: transform 0.3s ease-in-out; }
-        .hidden { display: none; }
-        .loader { border-top-color: #3b82f6; animation: spinner 1s linear infinite; }
-        @keyframes spinner { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        body {
+            font-family: 'Comic Sans MS', 'PingFang HK', 'Microsoft JhengHei', sans-serif;
+            background-color: #f0fdfa; /* 淺藍綠色背景 */
+        }
+        .card-hover {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 側邊欄樣式 */
+        #sidebar {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            z-index: 50; /* 確保在最上層 */
+        }
+        #sidebar.open {
+            transform: translateX(0);
+        }
+
+        /* 遮罩層樣式 */
+        #overlay {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+            z-index: 40;
+        }
+        #overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        /* 浮動按鈕樣式 */
+        #menu-btn {
+            z-index: 60;
+        }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col font-sans">
+<body class="p-6 md:p-12">
 
-    <nav class="bg-blue-600 text-white p-4 flex items-center shadow-md sticky top-0 z-30">
-        <button id="menuBtn" class="p-2 hover:bg-blue-700 rounded-lg transition">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </button>
-        <h1 class="flex-1 text-center text-xl font-bold pr-10">數學大冒險</h1>
-    </nav>
+    <!-- 浮動選單按鈕 (固定在左上角) -->
+    <button id="menu-btn" class="fixed top-4 left-4 bg-teal-500 hover:bg-teal-600 text-white rounded-full p-3 shadow-lg flex items-center justify-center transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+    </button>
 
-    <main class="flex-1 p-6 flex flex-col items-center justify-center">
-        
-        <div id="loginSection" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-sm border border-gray-100">
-            <h2 class="text-2xl font-black mb-6 text-center text-gray-800">勇者登入</h2>
-            <div class="space-y-4">
-                <input type="text" id="stuID" placeholder="請輸入學號 (ID)" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none transition">
-                <input type="password" id="stuPW" placeholder="請輸入密碼 (PW)" class="w-full p-3 border-2 border-gray-100 rounded-xl focus:border-blue-500 outline-none transition">
-                <button id="loginSubmit" class="w-full bg-blue-600 text-white p-4 rounded-xl font-bold hover:bg-blue-700 shadow-lg active:scale-95 transition">開始冒險</button>
-                <p id="errorMsg" class="text-red-500 text-sm text-center font-medium hidden">❌ 帳號或密碼錯誤</p>
-            </div>
-        </div>
+    <!-- 遮罩層 (點擊背景可關閉目錄) -->
+    <div id="overlay" class="fixed inset-0 bg-black bg-opacity-50"></div>
 
-        <div id="loadingSection" class="hidden text-center">
-            <div class="loader ease-linear rounded-full border-4 border-gray-200 h-14 w-14 mb-4 mx-auto"></div>
-            <p class="text-gray-500 font-medium">正在連線至世界伺服器...</p>
-        </div>
-
-        <div id="profileSection" class="hidden bg-white p-6 rounded-2xl shadow-xl w-full max-w-md border-t-8 border-blue-500">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shadow-inner" id="displayIcon">🛡️</div>
-                <div>
-                    <h2 class="text-2xl font-black text-gray-800" id="displayName">---</h2>
-                    <div class="flex items-center mt-1">
-                        <span class="bg-blue-600 text-white text-xs px-2 py-1 rounded-md font-bold">LV. <span id="displayLV">1</span></span>
-                        <span id="displayJob" class="ml-2 text-gray-500 font-bold text-sm">初級勇者</span>
-                    </div>
-                </div>
-            </div>
+    <!-- 側邊欄目錄 -->
+    <div id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-white shadow-2xl overflow-y-auto">
+        <div class="p-6 pt-16"> <!-- 增加 pt-16 避免被按鈕遮擋 -->
+            <h2 class="text-2xl font-bold text-teal-600 mb-6 border-b-2 border-teal-200 pb-2">小學數學樂園</h2>
             
-            <div class="grid grid-cols-2 gap-4 mb-6">
-                <div class="bg-red-50 p-4 rounded-2xl border border-red-100 text-center">
-                    <p class="text-xs text-red-400 font-black uppercase tracking-wider">攻擊力 (ATK)</p>
-                    <p class="text-3xl font-black text-red-600" id="attrATK">0</p>
-                </div>
-                <div class="bg-green-50 p-4 rounded-2xl border border-green-100 text-center">
-                    <p class="text-xs text-green-400 font-black uppercase tracking-wider">防禦力 (DEF)</p>
-                    <p class="text-3xl font-black text-green-600" id="attrDEF">0</p>
-                </div>
+            <div class="mb-6">
+                <h3 class="text-lg font-bold text-blue-600 mb-3 flex items-center"><span class="mr-2">📖</span> 自學網</h3>
+                <ul class="space-y-2">
+                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">📝 小數加法減法</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/fraction_as/" class="block text-gray-700 hover:text-blue-500 hover:bg-blue-50 p-2 rounded transition-colors">🍰 分數加法減法</a></li>
+                </ul>
             </div>
-            
-            <button onclick="location.reload()" class="w-full py-2 text-gray-400 text-sm font-medium hover:text-gray-600 transition">登出冒險者帳號</button>
-        </div>
-    </main>
 
-    <div id="sidebar" class="fixed inset-y-0 left-0 w-64 bg-white shadow-2xl transform -translate-x-full z-50">
-        <div class="p-6">
-            <h2 class="text-xl font-black text-gray-800 mb-8 border-b pb-4">冒險清單</h2>
-            <ul class="space-y-3">
-                <li><a href="#" class="block p-4 bg-blue-50 text-blue-700 rounded-xl font-bold italic">🏠 勇者大廳</a></li>
-                <li><a href="#" class="block p-4 hover:bg-gray-50 text-gray-600 rounded-xl font-bold transition">🎮 合十挑戰</a></li>
-            </ul>
+            <div>
+                <h3 class="text-lg font-bold text-orange-500 mb-3 flex items-center"><span class="mr-2">🎮</span> 數學遊戲</h3>
+                <ul class="space-y-2">
+                    <li><a href="https://baralaichow621-lab.github.io/fraction_division/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🧚‍♂️ 分數除法精靈戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">⚔️ 小數加減對戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏴‍☠️ 小數除法海盜戰</a></li>
+                    <li><a href="https://baralaichow621-lab.github.io/decimals4/" class="block text-gray-700 hover:text-orange-500 hover:bg-orange-50 p-2 rounded transition-colors">🏎️ 小數四則賽車</a></li>
+                </ul>
+            </div>
         </div>
     </div>
-    <div id="overlay" class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
+
+    <div class="max-w-5xl mx-auto pt-10"> <!-- 增加 pt-10 避免內容被按鈕遮擋 -->
+        
+        <!-- 標題 -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-teal-600 mb-4 drop-shadow-md">🚀 小學數學樂園 🎯</h1>
+            <p class="text-lg text-gray-600">一齊邊玩邊學，挑戰數學任務啦！</p>
+        </header>
+
+        <!-- 自學網區域 -->
+        <section class="mb-16">
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-3">📖</span>
+                <h2 class="text-3xl font-bold text-blue-600 border-b-4 border-blue-400 pb-2 inline-block">自學網</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- 自學網 1 -->
+                <!-- 移除了 target="_blank" -->
+                <a href="https://baralaichow621-lab.github.io/math-game/P4_Decimal_Plus_Minus.html" class="block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">📝</div>
+                    <h3 class="text-xl font-bold text-gray-800 text-center">小數加法減法</h3>
+                    <p class="text-blue-500 text-center mt-2 font-medium">進入學習 ➔</p>
+                </a>
+                
+                <!-- 自學網 2 -->
+                <a href="https://baralaichow621-lab.github.io/fraction_as/" class="block bg-white rounded-2xl p-6 border-l-8 border-blue-400 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">🍰</div>
+                    <h3 class="text-xl font-bold text-gray-800 text-center">分數加法減法</h3>
+                    <p class="text-blue-500 text-center mt-2 font-medium">進入學習 ➔</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- 數學遊戲區域 -->
+        <section>
+            <div class="flex items-center mb-6">
+                <span class="text-3xl mr-3">🎮</span>
+                <h2 class="text-3xl font-bold text-orange-500 border-b-4 border-orange-400 pb-2 inline-block">數學遊戲</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+                <!-- 遊戲 1 -->
+                <!-- 移除了 target="_blank" -->
+                <a href="https://baralaichow621-lab.github.io/fraction_division/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">🧚‍♂️</div>
+                    <h3 class="text-xl font-bold text-orange-700 text-center">分數除法精靈戰</h3>
+                    <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
+                </a>
+                
+                <!-- 遊戲 2 -->
+                <a href="https://baralaichow621-lab.github.io/math-game/P4G_Decimal_Plus_Minus.html" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">⚔️</div>
+                    <h3 class="text-xl font-bold text-orange-700 text-center">小數加減對戰</h3>
+                    <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
+                </a>
+
+                <!-- 遊戲 3 -->
+                <a href="https://baralaichow621-lab.github.io/decimals_decimals/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">🏴‍☠️</div>
+                    <h3 class="text-xl font-bold text-orange-700 text-center">小數除法海盜戰</h3>
+                    <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
+                </a>
+
+                <!-- 遊戲 4 -->
+                <a href="https://baralaichow621-lab.github.io/decimals4/" class="block bg-orange-50 rounded-2xl p-6 border-2 border-orange-200 card-hover shadow-md">
+                    <div class="text-5xl mb-4 text-center">🏎️</div>
+                    <h3 class="text-xl font-bold text-orange-700 text-center">小數四則賽車</h3>
+                    <p class="text-orange-600 text-center mt-2 font-bold">開始挑戰 ➔</p>
+                </a>
+            </div>
+        </section>
+
+        <!-- 頁尾 -->
+        <footer class="mt-16 text-center text-gray-400 text-sm">
+            <p>準備好迎接數學的挑戰了嗎？加油！</p>
+        </footer>
+
+    </div>
 
     <script>
-        // ！！！請替換成你的 GAS 部署網址 ！！！
-        const API_URL = "https://script.google.com/macros/s/AKfycbxi8Qk9rgDRqjrEnwJrtZhhXDUiSsHm3Ndqy2u6IKV6FJLuPBVat0Z6em-psKH8hIi_NA/exec"; 
-
-        function showSection(id) {
-            ['loginSection', 'loadingSection', 'profileSection'].forEach(s => document.getElementById(s).classList.add('hidden'));
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        document.getElementById('loginSubmit').addEventListener('click', async () => {
-            const id = document.getElementById('stuID').value.trim();
-            const pw = document.getElementById('stuPW').value.trim();
-            
-            if(!id || !pw) return alert("請輸入學號與密碼！");
-
-            showSection('loadingSection');
-            document.getElementById('errorMsg').classList.add('hidden');
-
-            try {
-                // 統一發送 POST 請求
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    body: JSON.stringify({ 
-                        action: 'login', 
-                        id: id,
-                        pw: pw 
-                    })
-                });
-
-                const res = await response.json();
-
-                if (res.success) {
-                    const userData = res.data;
-                    
-                    // 渲染介面資料
-                    document.getElementById('displayName').innerText = userData.name;
-                    document.getElementById('displayLV').innerText = userData.lv;
-                    document.getElementById('displayJob').innerText = userData.job || "初級勇者";
-                    
-                    // 處理數值
-                    const stats = userData.stats || { atk: 0, def: 0 };
-                    document.getElementById('attrATK').innerText = stats.atk;
-                    document.getElementById('attrDEF').innerText = stats.def;
-                    
-                    showSection('profileSection');
-                } else {
-                    showSection('loginSection');
-                    const errorElement = document.getElementById('errorMsg');
-                    errorElement.innerText = "❌ " + (res.msg || "登入失敗");
-                    errorElement.classList.remove('hidden');
-                }
-            } catch (e) {
-                console.error("Error:", e);
-                alert("伺服器連線失敗，請檢查網路或 GAS 部署設定。");
-                showSection('loginSection');
-            }
-        });
-
-        // 側邊欄邏輯
-        const menuBtn = document.getElementById('menuBtn');
+        const menuBtn = document.getElementById('menu-btn');
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('overlay');
-        function toggle() { 
-            sidebar.classList.toggle('-translate-x-full'); 
-            overlay.classList.toggle('opacity-50'); 
-            overlay.classList.toggle('pointer-events-none'); 
+
+        // 開關目錄的函數
+        function toggleMenu() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('open');
+            
+            // 更改按鈕圖示 (漢堡選單 <-> 交叉)
+            if (sidebar.classList.contains('open')) {
+                menuBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>`;
+            } else {
+                menuBtn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>`;
+            }
         }
-        menuBtn.onclick = toggle; overlay.onclick = toggle;
+
+        // 點擊按鈕時開關目錄
+        menuBtn.addEventListener('click', toggleMenu);
+
+        // 點擊遮罩層(背景)時關閉目錄
+        overlay.addEventListener('click', () => {
+            if (sidebar.classList.contains('open')) {
+                toggleMenu();
+            }
+        });
     </script>
 </body>
 </html>
