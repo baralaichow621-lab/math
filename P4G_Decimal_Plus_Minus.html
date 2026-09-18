@@ -98,12 +98,12 @@
     const DAMAGE_PER_HIT = 20;
 
     const CHARACTERS = [
-      'https://baralaichow621-lab.github.io/math/mon1.png',
-      'https://baralaichow621-lab.github.io/math/mon2.png',
-      'https://baralaichow621-lab.github.io/math/mon3.png',
-      'https://baralaichow621-lab.github.io/math/mon4.png',
-      'https://baralaichow621-lab.github.io/math/mon5.png',
-      'https://baralaichow621-lab.github.io/math/mon6.png',
+      'https://pmath-lab.github.io/math/mon1.png',
+      'https://pmath-lab.github.io/math/mon2.png',
+      'https://pmath-lab.github.io/math/mon3.png',
+      'https://pmath-lab.github.io/math/mon4.png',
+      'https://pmath-lab.github.io/math/mon5.png',
+      'https://pmath-lab.github.io/math/mon6.png',
     ];
 
     const playShootSound = () => {
@@ -169,13 +169,13 @@
       const victoryRef = useRef(null);
 
       useEffect(() => {
-        const audioUrl = "https://baralaichow621-lab.github.io/math/battle_theme1.mp3"; 
+        const audioUrl = "https://pmath-lab.github.io/math/battle_theme1.mp3"; 
         const audio = new Audio(audioUrl);
         audio.loop = true;
         audio.volume = 0.245; // 音量已降至約 70%
         bgmRef.current = audio;
 
-        const victoryAudio = new Audio("https://baralaichow621-lab.github.io/math/victory.mp3");
+        const victoryAudio = new Audio("https://pmath-lab.github.io/math/victory.mp3");
         victoryAudio.loop = false;
         victoryAudio.volume = 0.6;
         victoryRef.current = victoryAudio;
@@ -269,7 +269,7 @@
 
           <div 
             className="flex-[0.4] md:flex-[0.55] relative bg-cover bg-center bg-no-repeat border-b-2 border-slate-300 flex justify-between items-end px-2 md:px-16 pb-4 md:pb-8 overflow-hidden"
-            style={{ backgroundImage: `url('https://baralaichow621-lab.github.io/math/battle_bg.png')`, backgroundColor: '#87CEEB' }}
+            style={{ backgroundImage: `url('https://pmath-lab.github.io/math/battle_bg.png')`, backgroundColor: '#87CEEB' }}
           >
              <div className="absolute top-2 left-1/2 -translate-x-1/2 text-white/80 font-black drop-shadow-md text-base md:text-4xl whitespace-nowrap pointer-events-none z-10">MATH ARENA</div>
 
